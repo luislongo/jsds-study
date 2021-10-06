@@ -42,11 +42,70 @@ test('Length should increment by one every push', () => {
     expect(list.length).toBe(0)
 
     list.push('Node A')
+    expect(list.tail.value).toBe('Node A')
     expect(list.length).toBe(1)
 
     list.push('Node B')
+    expect(list.tail.value).toBe('Node B')
     expect(list.length).toBe(2)
 
     list.push('Node C')
+    expect(list.tail.value).toBe('Node C')
     expect(list.length).toBe(3)
+
+    list.push('Node D')
+    expect(list.tail.value).toBe('Node D')
+    expect(list.length).toBe(4)
+})
+
+test('If length is 1, head and tail should be null after pop', () => {
+    let list = new SinglyLinkedList()
+    list.push('Node A')
+    list.pop()
+    
+    expect(list.head).toBe(null)
+    expect(list.tail).toBe(null)
+
+})
+test('Pop should update tail', () => {
+    let list = new SinglyLinkedList()
+    list.push('Node A')
+    list.push('Node B')
+    list.push('Node C')
+    list.push('Node D')
+    list.push('Node E')
+    
+    list.pop()
+    expect(list.tail.value).toBe('Node D')
+    expect(list.length).toBe(4)
+
+    list.pop()
+    expect(list.tail.value).toBe('Node C')
+    expect(list.length).toBe(3)
+
+    list.pop()
+    expect(list.tail.value).toBe('Node B')
+    expect(list.length).toBe(2)
+
+    list.pop()
+    expect(list.tail.value).toBe('Node A')
+    expect(list.length).toBe(1)
+
+    list.pop()
+    expect(list.tail).toBe(null)
+    expect(list.length).toBe(0)
+})
+test('To String', () => {
+    let list = new SinglyLinkedList()
+    list.push('Node A')
+    list.push('Node B')
+    list.push('Node C')
+    list.push('Node D')
+    list.push('Node E')
+
+    const toString = list.toString()
+
+    expect(toString).toBe(
+        'Node A -> Node B -> Node C -> Node D -> Node E'
+    )
 })

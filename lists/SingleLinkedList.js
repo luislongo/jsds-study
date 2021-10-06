@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class SinglyLinkedList {
+class SingleLinkedList {
     constructor() {
         this.length = 0;
         this.head = null;
@@ -19,6 +19,35 @@ class SinglyLinkedList {
         this.length++;
         return this;
     }
+    pop() {
+        if (this.length == 1) {
+            this.head = null;
+            this.tail = null;
+            this.length--;
+        }
+        if (this.length > 1) {
+            var newTail = this.head;
+
+            while (newTail.next != this.tail) {
+                newTail = newTail.next;
+            }
+            
+            newTail.next = null;
+            this.tail = newTail;
+            this.length--;
+        }
+        return this;
+    }
+    toString() {
+        var string = '';
+        var node = this.head;
+        string += node.value;
+        while (node.next != null) {
+            node = node.next;
+            string += ' -> ' + node.value;
+        }
+        return string;
+    }
 }
 class SLLNode {
     constructor(value) {
@@ -26,4 +55,4 @@ class SLLNode {
         this.next = null;
     }
 }
-exports.default = SinglyLinkedList;
+exports.default = SingleLinkedList;
