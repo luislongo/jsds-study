@@ -14,8 +14,8 @@ class SingleLinkedList<T> {
         if(this.head == null) {
             this.head = newNode
             this.tail = newNode
-        } else if (this.tail != null){
-            this.tail.next = newNode
+        } else {
+            this.tail!.next = newNode
             this.tail = newNode
         }
 
@@ -24,17 +24,20 @@ class SingleLinkedList<T> {
         return this
     }
 
-    pop() : SingleLinkedList<T> {
+    pop() : T | null {
+        var node : SLLNode<T> | null = this.tail
+        
         if(this.length == 1) {
             this.head = null
             this.tail = null
 
             this.length--
         }
+
         if(this.length > 1) {
             var newTail = this.head
             
-            for(var i = 1; i < this.length-1; i++) {
+            while (newTail!.next != this.tail) {
                 newTail = newTail!.next
             }
         
@@ -43,8 +46,62 @@ class SingleLinkedList<T> {
 
             this.length--
         }
+
+        if(node) {
+            return node.value
+        } else {
+            return null
+        }
+    }
+    shift() : T | null {
+        const node : SLLNode<T> | null = this.head
+
+        if(this.length == 1) {
+            this.head = null
+            this.tail = null
+            this.length--
+        }
+        if(this.length > 1) {
+            var oldHead : SLLNode<T> = this.head!
+            this.head = oldHead.next
+            oldHead.next = null
+
+            this.length--
+        }
+
+        if(node) {
+            return node.value
+        } else {
+            return null
+        }
+    }
+    unshift(value : T) : SingleLinkedList<T> {
+        const newNode = new SLLNode<T>(value)
+
+        if(this.head == null) {
+            this.head = newNode
+            this.tail = newNode
+        } else {
+            newNode.next = this.head
+            this.head = newNode
+        }
+
+        this.length++
+
         return this
     }
+    get(pos : Number) : T | null {
+        if(pos >= 0 && pos <this.length) {
+            var node : SLLNode<T> | null = this.head;
+            for(var i = 0; i < pos; i++) {
+                node = node!.next
+            }
+            return node!.value
+        } else {
+            return null
+        }
+    }
+
     toString() : String {
         var string = ''
         var node = this.head

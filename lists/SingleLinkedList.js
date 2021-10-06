@@ -12,7 +12,7 @@ class SingleLinkedList {
             this.head = newNode;
             this.tail = newNode;
         }
-        else if (this.tail != null) {
+        else {
             this.tail.next = newNode;
             this.tail = newNode;
         }
@@ -20,6 +20,7 @@ class SingleLinkedList {
         return this;
     }
     pop() {
+        var node = this.tail;
         if (this.length == 1) {
             this.head = null;
             this.tail = null;
@@ -27,16 +28,64 @@ class SingleLinkedList {
         }
         if (this.length > 1) {
             var newTail = this.head;
-
             while (newTail.next != this.tail) {
                 newTail = newTail.next;
             }
-            
             newTail.next = null;
             this.tail = newTail;
             this.length--;
         }
+        if (node) {
+            return node.value;
+        }
+        else {
+            return null;
+        }
+    }
+    shift() {
+        const node = this.head;
+        if (this.length == 1) {
+            this.head = null;
+            this.tail = null;
+            this.length--;
+        }
+        if (this.length > 1) {
+            var oldHead = this.head;
+            this.head = oldHead.next;
+            oldHead.next = null;
+            this.length--;
+        }
+        if (node) {
+            return node.value;
+        }
+        else {
+            return null;
+        }
+    }
+    unshift(value) {
+        const newNode = new SLLNode(value);
+        if (this.head == null) {
+            this.head = newNode;
+            this.tail = newNode;
+        }
+        else {
+            newNode.next = this.head;
+            this.head = newNode;
+        }
+        this.length++;
         return this;
+    }
+    get(pos) {
+        if (pos >= 0 && pos < this.length) {
+            var node = this.head;
+            for (var i = 0; i < pos; i++) {
+                node = node.next;
+            }
+            return node.value;
+        }
+        else {
+            return null;
+        }
     }
     toString() {
         var string = '';
