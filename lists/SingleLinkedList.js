@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class SinglyLinkedList {
     constructor() {
+        this.length = 0;
         this.head = null;
         this.tail = null;
     }
@@ -15,6 +16,8 @@ class SinglyLinkedList {
             this.tail.next = newNode;
             this.tail = newNode;
         }
+        this.length++;
+        return this;
     }
 }
 class SLLNode {
@@ -23,5 +26,4 @@ class SLLNode {
         this.next = null;
     }
 }
-
 exports.default = SinglyLinkedList;
