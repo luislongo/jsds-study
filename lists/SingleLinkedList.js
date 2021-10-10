@@ -87,6 +87,37 @@ class SingleLinkedList {
             return null;
         }
     }
+    set(pos, value) {
+        if (pos >= 0 && pos < this.length) {
+            var node = this.head;
+            for (var i = 0; i < pos; i++) {
+                node = node.next;
+            }
+            node.value = value;
+        }
+        else {
+            return null;
+        }
+    }
+    insert(pos, value) {
+        if (pos == 0) {
+            this.unshift(value);
+        }
+        else if (pos == this.length) {
+            this.push(value);
+        }
+        else if ((pos < this.length) && (pos > 0)) {
+            const newNode = new SLLNode(value);
+            var pre = this.head;
+            for (var i = 0; i < pos - 1; i++) {
+                pre = pre.next;
+            }
+            var post = pre.next;
+            pre.next = newNode;
+            newNode.next = post;
+            this.length++;
+        }
+    }
     toString() {
         var string = '';
         var node = this.head;
