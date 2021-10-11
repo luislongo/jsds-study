@@ -130,6 +130,38 @@ class SingleLinkedList<T> {
             this.length++
         }
     }
+    remove(pos : number) : T | null {
+        if(pos == 0) {return this.shift()} else 
+        if(pos == this.length - 1) {return this.pop()} else 
+        if((pos < this.length - 1) && (pos > 0)) {
+
+            var pre = this.head;
+            for (var i = 0; i < pos - 1; i++) {
+                pre = pre!.next;
+            }
+
+            var node = pre!.next
+            var post = node!.next
+
+            pre!.next = post
+            this.length--
+
+            return node!.value
+        } else {
+            return null
+        }
+    } 
+    reverse() : SingleLinkedList<T> {
+        var reverse = new SingleLinkedList<T>()
+        if(this.length >= 1) {
+            var node = this.head
+            for (var i = 0; i < this.length; i++) {
+                reverse.unshift(node!.value)
+                node = node!.next
+            }
+        }
+        return reverse
+    }
     toString() : String {
         var string = ''
         var node = this.head

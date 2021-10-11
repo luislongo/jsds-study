@@ -249,6 +249,78 @@ test('Insert at middle should update next pointers', () => {
     expect(list.get(2)).toBe('Inserted node')
     expect(list.get(3)).toBe('Node C')
 })
+test('Insert at first should behave like shift', () => {
+    let list = new SingleLinkedList()
+    list.push('Node A')
+    list.push('Node B')
+    list.push('Node C')
+
+    expect(list.remove(0)).toBe('Node A')
+    expect(list.head.value).toBe('Node B')
+    expect(list.length).toBe(2)
+})
+test('Remove at last should behave like pop', () => {
+    let list = new SingleLinkedList()
+    list.push('Node A')
+    list.push('Node B')
+    list.push('Node C')
+
+    expect(list.remove(2)).toBe('Node C')
+    expect(list.tail.value).toBe('Node B')
+})
+test('Remove at middle should update next pointers', () => {
+    let list = new SingleLinkedList()
+    list.push('Node A')
+    list.push('Node B')
+    list.push('Node C')
+
+    expect(list.remove(1)).toBe('Node B')
+    expect(list.get(0)).toBe('Node A')
+    expect(list.get(1)).toBe('Node C')
+})
+test('Revert empty list shouldnt do anything', () => {
+    var list = new SingleLinkedList()
+    var revList = list.reverse()
+
+    expect(revList.head).toBe(null)
+    expect(revList.tail).toBe(null)
+    expect(revList.length).toBe(0)
+})
+test('Revert list with length less than 2 would keep the same order', () => {
+    let list = new SingleLinkedList()
+    list.push('Node A')
+    
+    let revList = list.reverse()
+
+    expect(revList.head.value).toBe('Node A')
+    expect(revList.tail.value).toBe('Node A')
+    expect(revList.length).toBe(1)
+})
+test('Revert list should invert head and tail', () => {
+    let list = new SingleLinkedList()
+    list.push('Node A')
+    list.push('Node B')
+
+    var revList = list.reverse()
+
+    expect(revList.head.value).toBe('Node B')
+    expect(revList.tail.value).toBe('Node A')
+    expect(revList.length).toBe(2)
+})
+test('Revert list should invert order of nodes', () => {
+    let list = new SingleLinkedList()
+    list.push('Node A')
+    list.push('Node B')
+    list.push('Node C')
+    list.push('Node D')
+
+    var revList = list.reverse()
+
+    expect(revList.get(0)).toBe('Node D')
+    expect(revList.get(1)).toBe('Node C')
+    expect(revList.get(2)).toBe('Node B')
+    expect(revList.get(3)).toBe('Node A')
+})
 test('To String', () => {
     let list = new SingleLinkedList()
     list.push('Node A')
