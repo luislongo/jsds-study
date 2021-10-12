@@ -90,23 +90,16 @@ class SingleLinkedList<T> {
 
         return this
     }
-    get(pos : Number) : T | null {
+    get(pos : number) : T | null {
         if(pos >= 0 && pos <this.length) {
-            var node : SLLNode<T> | null = this.head;
-            for(var i = 0; i < pos; i++) {
-                node = node!.next
-            }
-            return node!.value
-        } else {
-            return null
-        }
+            var node = this.getNode(pos)
+            if(node) {return node!.value}
+        } 
+        return null
     }
     set(pos: number, value : T) {
         if(pos >= 0 && pos <this.length) {
-            var node : SLLNode<T> | null = this.head;
-            for(var i = 0; i < pos; i++) {
-                node = node!.next
-            }
+            var node = this.getNode(pos)
             node!.value = value
         } else {
             return null
@@ -118,10 +111,7 @@ class SingleLinkedList<T> {
         if((pos < this.length) && (pos > 0)) {
             const newNode = new SLLNode(value)
 
-            var pre = this.head;
-            for (var i = 0; i < pos - 1; i++) {
-                pre = pre!.next;
-            }
+            var pre = this.getNode(pos - 1)
             var post = pre!.next
 
             pre!.next = newNode
@@ -135,11 +125,7 @@ class SingleLinkedList<T> {
         if(pos == this.length - 1) {return this.pop()} else 
         if((pos < this.length - 1) && (pos > 0)) {
 
-            var pre = this.head;
-            for (var i = 0; i < pos - 1; i++) {
-                pre = pre!.next;
-            }
-
+            var pre = this.getNode(pos-1)
             var node = pre!.next
             var post = node!.next
 
@@ -161,6 +147,16 @@ class SingleLinkedList<T> {
             }
         }
         return reverse
+    }
+    getNode(pos : number) : SLLNode<T> | null {
+        if(pos >= 0 && pos <this.length) {
+            var node : SLLNode<T> | null = this.head;
+            for(var i = 0; i < pos; i++) {
+                node = node!.next
+            }
+            return node
+        } 
+        return null
     }
     toString() : String {
         var string = ''

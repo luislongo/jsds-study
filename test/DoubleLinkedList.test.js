@@ -1,74 +1,51 @@
-const SingleLinkedList = require("../lists/SingleLinkedList").default;
+const DoubleLinkedList = require("../lists/DoubleLinkedList.js").default
 
 test('Head and tail should be null before pushes', () => {
-    let list = new SingleLinkedList;
+    var list = new DoubleLinkedList()
 
     expect(list.head).toBe(null)
     expect(list.tail).toBe(null)
+    expect(list.length).toBe(0)
 })
 test('Head and tail should be the same after first push', () => {
-    let list = new SingleLinkedList()
+    var list = new DoubleLinkedList()
     list.push('Node A')
 
     expect(list.head.value).toBe('Node A')
-    expect(list.tail.value).toBe('Node A')
-})
-test('Pushes should be inserted at the end of the list', () => {
-    let list = new SingleLinkedList()
-    list.push('Node A')
-    list.push('Node B')
-
-    expect(list.head.value).toBe('Node A')
-    expect(list.tail.value).toBe('Node B')
-})
-test('Head next value should be tail after two pushes', () => {
-    let list = new SingleLinkedList()
-    list.push('Node A')
-    list.push('Node B')
-
-    expect(list.head.next.value).toBe('Node B')
-})
-test('Next values should maintain the sequence', () => {
-    let list = new SingleLinkedList()
-    list.push('Node A')
-    list.push('Node B')
-    list.push('Node C')
-
-    expect(list.head.next.value).toBe('Node B')
-    expect(list.head.next.next.value).toBe('Node C')
-})
-test('Length should increment by one every push', () => {
-    let list = new SingleLinkedList()
-    expect(list.length).toBe(0)
-
-    list.push('Node A')
     expect(list.tail.value).toBe('Node A')
     expect(list.length).toBe(1)
-
+})
+test('Pushes should be inserted at the end of the list', () => {
+    var list = new DoubleLinkedList()
+    list.push('Node A')
     list.push('Node B')
+
+    expect(list.head.value).toBe('Node A')
     expect(list.tail.value).toBe('Node B')
     expect(list.length).toBe(2)
-
+})
+test('Pushes should be sequential at the end of the list', () => {
+    var list = new DoubleLinkedList()
+    list.push('Node A')
+    list.push('Node B')
     list.push('Node C')
+
+    expect(list.head.value).toBe('Node A')
+    expect(list.head.next.value).toBe('Node B')
+    expect(list.tail.prev.value).toBe('Node B')
     expect(list.tail.value).toBe('Node C')
     expect(list.length).toBe(3)
-
-    list.push('Node D')
-    expect(list.tail.value).toBe('Node D')
-    expect(list.length).toBe(4)
 })
-
 test('If length is 1, head and tail should be null after pop', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.pop()
     
     expect(list.head).toBe(null)
     expect(list.tail).toBe(null)
-
 })
 test('Pop should update tail', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -98,16 +75,8 @@ test('Pop should update tail', () => {
     expect(list.pop()).toBe(null)
     expect(list.length).toBe(0)
 })
-test('If length is 1, head and tail should be null after shift', () => {
-    let list = new SingleLinkedList()
-    list.push('Node A')
-    
-    expect(list.shift()).toBe('Node A')
-    expect(list.head).toBe(null)
-    expect(list.tail).toBe(null)
-})
 test('Shift should update tail', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -138,7 +107,7 @@ test('Shift should update tail', () => {
     expect(list.length).toBe(0)
 })
 test('Unshift should add new nodes to the head of the list', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     expect(list.length).toBe(0)
 
     list.unshift('Node A')
@@ -157,10 +126,10 @@ test('Unshift should add new nodes to the head of the list', () => {
     expect(list.head.value).toBe('Node D')
     expect(list.length).toBe(4)
 
-    expect(list.tail.value).toBe('Node A')
+    console.log(list.toString())
 })
 test('Get should return the value of the node at position', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -174,7 +143,7 @@ test('Get should return the value of the node at position', () => {
     expect(list.get(4)).toBe('Node E')
 })
 test('Get should return null if position is invalid', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -185,7 +154,7 @@ test('Get should return null if position is invalid', () => {
     expect(list.get(5)).toBe(null)
 })
 test('Get should return the value of the corresponding node', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -199,7 +168,7 @@ test('Get should return the value of the corresponding node', () => {
     expect(list.get(4)).toBe('Node E')
 })
 test('Set should change the value of the corresponding node', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -218,7 +187,7 @@ test('Set should change the value of the corresponding node', () => {
     expect(list.get(4)).toBe('Node E - Changed E')
 })
 test('Insert at first should behave like unshift', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -228,7 +197,7 @@ test('Insert at first should behave like unshift', () => {
     expect(list.head.next.value).toBe('Node A')
 })
 test('Insert at last should behave like push', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -237,20 +206,21 @@ test('Insert at last should behave like push', () => {
 
     expect(list.tail.value).toBe('Inserted node')
 })
-test('Insert at middle should update next pointers', () => {
-    let list = new SingleLinkedList()
+test('Insert at middle should update next and prev pointers', () => {
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
 
     list.insert(2, 'Inserted node')
-    console.log(list.toString())
+
     expect(list.get(1)).toBe('Node B')
     expect(list.get(2)).toBe('Inserted node')
     expect(list.get(3)).toBe('Node C')
 })
-test('Insert at first should behave like shift', () => {
-    let list = new SingleLinkedList()
+
+test('Remove at first should behave like shift', () => {
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -260,7 +230,7 @@ test('Insert at first should behave like shift', () => {
     expect(list.length).toBe(2)
 })
 test('Remove at last should behave like pop', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -269,7 +239,7 @@ test('Remove at last should behave like pop', () => {
     expect(list.tail.value).toBe('Node B')
 })
 test('Remove at middle should update next pointers', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -278,8 +248,9 @@ test('Remove at middle should update next pointers', () => {
     expect(list.get(0)).toBe('Node A')
     expect(list.get(1)).toBe('Node C')
 })
+
 test('Revert empty list shouldnt do anything', () => {
-    var list = new SingleLinkedList()
+    var list = new DoubleLinkedList()
     var revList = list.reverse()
 
     expect(revList.head).toBe(null)
@@ -287,7 +258,7 @@ test('Revert empty list shouldnt do anything', () => {
     expect(revList.length).toBe(0)
 })
 test('Revert list with length less than 2 would keep the same order', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     
     let revList = list.reverse()
@@ -297,7 +268,7 @@ test('Revert list with length less than 2 would keep the same order', () => {
     expect(revList.length).toBe(1)
 })
 test('Revert list should invert head and tail', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
 
@@ -308,7 +279,7 @@ test('Revert list should invert head and tail', () => {
     expect(revList.length).toBe(2)
 })
 test('Revert list should invert order of nodes', () => {
-    let list = new SingleLinkedList()
+    let list = new DoubleLinkedList()
     list.push('Node A')
     list.push('Node B')
     list.push('Node C')
@@ -320,18 +291,4 @@ test('Revert list should invert order of nodes', () => {
     expect(revList.get(1)).toBe('Node C')
     expect(revList.get(2)).toBe('Node B')
     expect(revList.get(3)).toBe('Node A')
-})
-test('To String', () => {
-    let list = new SingleLinkedList()
-    list.push('Node A')
-    list.push('Node B')
-    list.push('Node C')
-    list.push('Node D')
-    list.push('Node E')
-
-    const toString = list.toString()
-
-    expect(toString).toBe(
-        'Node A -> Node B -> Node C -> Node D -> Node E'
-    )
 })

@@ -1,19 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class SingleLinkedList {
+class DoubleLinkedList {
     constructor() {
-        this.length = 0;
         this.head = null;
         this.tail = null;
+        this.length = 0;
     }
     push(value) {
-        const newNode = new SLLNode(value);
-        if (this.head == null) {
+        var newNode = new DLLNode(value);
+        if (this.length == 0) {
             this.head = newNode;
             this.tail = newNode;
         }
         else {
             this.tail.next = newNode;
+            newNode.prev = this.tail;
             this.tail = newNode;
         }
         this.length++;
@@ -26,13 +27,8 @@ class SingleLinkedList {
             this.tail = null;
             this.length--;
         }
-        if (this.length > 1) {
-            var newTail = this.head;
-            while (newTail.next != this.tail) {
-                newTail = newTail.next;
-            }
-            newTail.next = null;
-            this.tail = newTail;
+        else if (this.length > 1) {
+            this.tail = this.tail.prev;
             this.length--;
         }
         if (node) {
@@ -43,16 +39,14 @@ class SingleLinkedList {
         }
     }
     shift() {
-        const node = this.head;
+        var node = this.head;
         if (this.length == 1) {
             this.head = null;
             this.tail = null;
             this.length--;
         }
-        if (this.length > 1) {
-            var oldHead = this.head;
-            this.head = oldHead.next;
-            oldHead.next = null;
+        else if (this.length > 1) {
+            this.head = this.head.next;
             this.length--;
         }
         if (node) {
@@ -63,12 +57,13 @@ class SingleLinkedList {
         }
     }
     unshift(value) {
-        const newNode = new SLLNode(value);
-        if (this.head == null) {
+        var newNode = new DLLNode(value);
+        if (this.length == 0) {
             this.head = newNode;
             this.tail = newNode;
         }
         else {
+            this.head.prev = newNode;
             newNode.next = this.head;
             this.head = newNode;
         }
@@ -89,9 +84,6 @@ class SingleLinkedList {
             var node = this.getNode(pos);
             node.value = value;
         }
-        else {
-            return null;
-        }
     }
     insert(pos, value) {
         if (pos == 0) {
@@ -100,12 +92,14 @@ class SingleLinkedList {
         else if (pos == this.length) {
             this.push(value);
         }
-        else if ((pos < this.length) && (pos > 0)) {
-            const newNode = new SLLNode(value);
-            var pre = this.getNode(pos - 1);
-            var post = pre.next;
-            pre.next = newNode;
-            newNode.next = post;
+        else {
+            var newNode = new DLLNode(value);
+            var node = this.getNode(pos);
+            var prev = node.prev;
+            prev.next = newNode;
+            node.prev = newNode;
+            newNode.prev = prev;
+            newNode.next = node;
             this.length++;
         }
     }
@@ -116,38 +110,30 @@ class SingleLinkedList {
         else if (pos == this.length - 1) {
             return this.pop();
         }
-        else if ((pos < this.length - 1) && (pos > 0)) {
-            var pre = this.getNode(pos - 1);
-            var node = pre.next;
-            var post = node.next;
-            pre.next = post;
-            this.length--;
+        else if (pos > 0 && pos < this.length - 1) {
+            var node = this.getNode(pos);
+            var prev = node.prev;
+            var next = node.next;
+            prev.next = next;
+            next.prev = prev;
             return node.value;
-        }
-        else {
-            return null;
         }
     }
     reverse() {
-        var reverse = new SingleLinkedList();
-        if (this.length >= 1) {
-            var node = this.head;
-            for (var i = 0; i < this.length; i++) {
-                reverse.unshift(node.value);
-                node = node.next;
-            }
+        var node = this.head;
+        var revList = new DoubleLinkedList();
+        for (var i = 0; i < this.length; i++) {
+            revList.unshift(node.value);
+            node = node.next;
         }
-        return reverse;
+        return revList;
     }
     getNode(pos) {
-        if (pos >= 0 && pos < this.length) {
-            var node = this.head;
-            for (var i = 0; i < pos; i++) {
-                node = node.next;
-            }
-            return node;
+        var node = this.head;
+        for (var i = 0; i < pos; i++) {
+            node = node.next;
         }
-        return null;
+        return node;
     }
     toString() {
         var string = '';
@@ -155,15 +141,16 @@ class SingleLinkedList {
         string += node.value;
         while (node.next != null) {
             node = node.next;
-            string += ' -> ' + node.value;
+            string += ' <-> ' + node.value;
         }
         return string;
     }
 }
-class SLLNode {
+class DLLNode {
     constructor(value) {
         this.value = value;
         this.next = null;
+        this.prev = null;
     }
 }
-exports.default = SingleLinkedList;
+exports.default = DoubleLinkedList;
