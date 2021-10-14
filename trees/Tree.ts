@@ -25,5 +25,4 @@ class TreeNode<T> {
     }
 }
 
-export default Tree
-module.exports = {Tree, TreeNode}
+export {Tree, TreeNode}

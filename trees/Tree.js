@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TreeNode = exports.Tree = void 0;
 class Tree {
     constructor(root) {
         if (root) {
@@ -10,6 +11,7 @@ class Tree {
         }
     }
 }
+exports.Tree = Tree;
 class TreeNode {
     constructor(value) {
         this.value = value;
@@ -24,5 +26,4 @@ class TreeNode {
         });
     }
 }
-exports.default = Tree;
-module.exports = { Tree, TreeNode };
+exports.TreeNode = TreeNode;
