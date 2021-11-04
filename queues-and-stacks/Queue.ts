@@ -14,6 +14,10 @@ class Queue<T> {
     dequeue() : T | null {
         return this.nodes.shift()
     }
+
+    length() : number {
+        return this.nodes.length
+    }
 }
 
 export default Queue

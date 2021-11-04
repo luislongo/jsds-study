@@ -14,5 +14,8 @@ class Queue {
     dequeue() {
         return this.nodes.shift();
     }
+    length() {
+        return this.nodes.length;
+    }
 }
 exports.default = Queue;
