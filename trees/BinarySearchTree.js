@@ -4,69 +4,86 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _BinarySearchTree_instances, _BinarySearchTree_insert, _BinarySearchTree_find;
+var _BinarySearchTree_insert, _BinarySearchTree_find;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BinarySearchTree = exports.BSTNode = void 0;
+exports.BSTNode = exports.RuleResult = exports.BinarySearchTree = void 0;
 class BinarySearchTree {
-    constructor(rule) {
-        _BinarySearchTree_instances.add(this);
-        this.root = null;
-        this.rule = rule;
-    }
-    push(value) {
-        if (this.root == null) {
-            this.root = new BSTNode(value);
-        }
-        else {
-            __classPrivateFieldGet(this, _BinarySearchTree_instances, "m", _BinarySearchTree_insert).call(this, value, this.root);
-        }
-    }
-    find(value) {
-        if (this.root) {
-            return __classPrivateFieldGet(this, _BinarySearchTree_instances, "m", _BinarySearchTree_find).call(this, value, this.root);
-        }
-        else {
+    constructor(rule, root) {
+        this.insert = (node) => {
+            if (!this.root) {
+                this.root = node;
+            }
+            else {
+                __classPrivateFieldGet(this, _BinarySearchTree_insert, "f").call(this, node, this.root);
+            }
+        };
+        _BinarySearchTree_insert.set(this, (node, parent) => {
+            //Checks if inserted value goes left
+            if (this.rule(node.key, parent.key) == RuleResult.LEFT) {
+                if (parent.left) {
+                    __classPrivateFieldGet(this, _BinarySearchTree_insert, "f").call(this, node, parent.left);
+                }
+                else {
+                    parent.left = node;
+                }
+                return;
+            }
+            //Checks if inserted value goes right
+            if (this.rule(node.key, parent.key) == RuleResult.RIGHT) {
+                if (parent.right) {
+                    __classPrivateFieldGet(this, _BinarySearchTree_insert, "f").call(this, node, parent.right);
+                }
+                else {
+                    parent.right = node;
+                }
+                return;
+            }
+            //If value is the same, does nothing
+        });
+        this.find = (key) => {
+            if (this.root) {
+                return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, this.root);
+            }
+            else {
+                return null;
+            }
+        };
+        _BinarySearchTree_find.set(this, (key, node) => {
+            if (this.rule(key, node.key) == RuleResult.LEFT) {
+                if (node.left) {
+                    return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, node.left);
+                }
+            }
+            if (this.rule(key, node.key) == RuleResult.RIGHT) {
+                if (node.right) {
+                    return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, node.right);
+                }
+            }
+            if (this.rule(key, node.key) == RuleResult.EQUAL) {
+                return node;
+            }
             return null;
+        });
+        this.rule = rule;
+        if (root) {
+            this.root = root;
+        }
+        else {
+            this.root = null;
         }
     }
 }
 exports.BinarySearchTree = BinarySearchTree;
-_BinarySearchTree_instances = new WeakSet(), _BinarySearchTree_insert = function _BinarySearchTree_insert(value, node) {
-    if (this.rule(value, node.value) == -1) {
-        if (node.left) {
-            __classPrivateFieldGet(this, _BinarySearchTree_instances, "m", _BinarySearchTree_insert).call(this, value, node.left);
-        }
-        else {
-            node.left = new BSTNode(value);
-        }
-    }
-    if (this.rule(value, node.value) == 1) {
-        if (node.right) {
-            __classPrivateFieldGet(this, _BinarySearchTree_instances, "m", _BinarySearchTree_insert).call(this, value, node.right);
-        }
-        else {
-            node.right = new BSTNode(value);
-        }
-    }
-}, _BinarySearchTree_find = function _BinarySearchTree_find(value, node) {
-    if (this.rule(value, node.value) == 0) {
-        return node;
-    }
-    if (this.rule(value, node.value) == -1) {
-        if (node.left) {
-            return __classPrivateFieldGet(this, _BinarySearchTree_instances, "m", _BinarySearchTree_find).call(this, value, node.left);
-        }
-    }
-    if (this.rule(value, node.value) == 1) {
-        if (node.right) {
-            return __classPrivateFieldGet(this, _BinarySearchTree_instances, "m", _BinarySearchTree_find).call(this, value, node.right);
-        }
-    }
-    return null;
-};
+_BinarySearchTree_insert = new WeakMap(), _BinarySearchTree_find = new WeakMap();
+var RuleResult;
+(function (RuleResult) {
+    RuleResult[RuleResult["LEFT"] = 0] = "LEFT";
+    RuleResult[RuleResult["RIGHT"] = 1] = "RIGHT";
+    RuleResult[RuleResult["EQUAL"] = 2] = "EQUAL";
+})(RuleResult = exports.RuleResult || (exports.RuleResult = {}));
 class BSTNode {
-    constructor(value) {
-        this.value = value;
+    constructor(key) {
+        this.key = key;
         this.left = null;
         this.right = null;
     }

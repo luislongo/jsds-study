@@ -243,7 +243,6 @@ test('Insert at middle should update next pointers', () => {
     list.push('Node C')
 
     list.insert(2, 'Inserted node')
-    console.log(list.toString())
     expect(list.get(1)).toBe('Node B')
     expect(list.get(2)).toBe('Inserted node')
     expect(list.get(3)).toBe('Node C')

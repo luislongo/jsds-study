@@ -1,28 +1,38 @@
-class Tree<T> {
-    root : TreeNode<T> | null
+import Queue from "../queues-and-stacks/Queue"
 
-    constructor(root : TreeNode<T> | null) {
-        if(root) {this.root = root} else {
+export class Tree<T extends TreeNode<T>> {
+    root : T | null
+
+    constructor(root : T | null) {
+        if(root) {
+            this.root = root
+        } else {
             this.root = null
         }
     }
-}
-class TreeNode<T> {
-    value : T
-    children : TreeNode<T>[]
 
-    constructor(value : T) {
-        this.value = value
-        this.children = []
+    bfs = () => {
+        const cache = new Queue<T>();
+        const array = new Array<T>();
+
+        if(this.root) {
+            cache.enqueue(this.root)
+            array.push(this.root)
+        }
+
     }
-    addChild(child : TreeNode<T>) {
+}
+
+
+export class TreeNode<T extends TreeNode<T>> {
+    children : T[]
+
+    constructor() {
+        this.children = new Array<T>();
+    }
+
+    addChild = (child : T) => {
         this.children.push(child)
     }
-    removeChild(child : TreeNode<T>) {
-        this.children = this.children.filter((node) => {
-            return(child != node)
-        })
-    }
-}
 
-export {Tree, TreeNode}
+}

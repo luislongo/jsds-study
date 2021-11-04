@@ -1,181 +1,137 @@
-const {BinarySearchTree} = require("../trees/BinarySearchTree");
+const BinarySearchTree = require("../trees/BinarySearchTree").BinarySearchTree
+const BSTNode = require("../trees/BinarySearchTree").BSTNode
+const RuleResult = require("../trees/BinarySearchTree").RuleResult
 
-test('Root should be null at startup', () => {
-    var bst = new BinarySearchTree((a, b) => -1);
-    expect(bst.root).toBe(null);
-});
-test('First push should always be inserted at root', () => {
-    var bst = new BinarySearchTree((a, b) => -1);
-    bst.push('Root');
-    expect(bst.root.value).toBe('Root');
-});
-test('Left and right pushes should respect the rule', () => {
-    var bst = new BinarySearchTree((a, b) => {
-        return a > b ? 1 : -1;
-    });
+test('Root should be null for empty tree', () => {
+    const rule = (a, b) => {
+        if(a  < b) return RuleResult.LEFT
+        if(a == b) return RuleResult.EQUAL
+        if(a  > b) return RuleResult.RIGHT
+    }
 
-    bst.push(0);
-    bst.push(-1);
-    bst.push(1);
-    expect(bst.root.value).toBe(0);
-    expect(bst.root.left.value).toBe(-1);
-    expect(bst.root.right.value).toBe(1);
-});
-test('Push should abide to the tree structure', () => {
-    var bst = new BinarySearchTree((a, b) => {
-        return a > b ? 1 : -1;
-    });
-    bst.push(0)
-    bst.push(-2)
-    bst.push(2)
-    bst.push(1)
-    bst.push(-1)
-    bst.push(-3)
-    bst.push(3)
-
-    expect(bst.root.value).toBe(0)
-
-    expect(bst.root.left.value).toBe(-2)
-    expect(bst.root.left.left.value).toBe(-3)
-    expect(bst.root.left.right.value).toBe(-1)
-
-    expect(bst.root.right.value).toBe(2)
-    expect(bst.root.right.left.value).toBe(1)
-    expect(bst.root.right.right.value).toBe(3)
+    const tree = new BinarySearchTree(rule, null)
+    expect(tree.root).toBe(null)
 })
-test('Push should abide to the tree structure', () => {
-    var bst = new BinarySearchTree((a, b) => {
-        return a < b ? 1 : -1;
-    });
-    bst.push(0)
-    bst.push(-2)
-    bst.push(2)
-    bst.push(1)
-    bst.push(-1)
-    bst.push(-3)
-    bst.push(3)
+test('Root should be value for initialised tree', () => {
+    const rule = (a, b) => {
+        if(a  < b) return RuleResult.LEFT
+        if(a == b) return RuleResult.EQUAL
+        if(a  > b) return RuleResult.RIGHT
+    }
 
-    expect(bst.root.value).toBe(0)
+    const root = new BSTNode(10);
 
-    expect(bst.root.left.value).toBe(2)
-    expect(bst.root.left.left.value).toBe(3)
-    expect(bst.root.left.right.value).toBe(1)
-    expect(bst.root.right.value).toBe(-2)
-    expect(bst.root.right.left.value).toBe(-1)
-    expect(bst.root.right.right.value).toBe(-3)
+    const tree = new BinarySearchTree(rule, root)
+    expect(tree.root.key).toBe(10)
 })
-test('Push should abide to the tree structure',() => {
-    var bst = new BinarySearchTree((a, b) => {
-        return a > b ? 1 : -1;
-    });
+test('Insert should add children obeying the rule', () => {
+    const rule = (a, b) => {
+        if(a  < b) return RuleResult.LEFT
+        if(a == b) return RuleResult.EQUAL
+        if(a  > b) return RuleResult.RIGHT
+    }
 
-    bst.push(10)    
-    bst.push(5)    
-    bst.push(13)    
-    bst.push(11)    
-    bst.push(2)    
-    bst.push(15)    
-    bst.push(7)
-    
-    expect(bst.root.value).toBe(10)
+    const tree = new BinarySearchTree(rule, new BSTNode(10))
+    tree.insert(new BSTNode(8))
+    tree.insert(new BSTNode(9))
+    tree.insert(new BSTNode(7))
+    tree.insert(new BSTNode(12))
+    tree.insert(new BSTNode(11))
+    tree.insert(new BSTNode(13))
 
-    expect(bst.root.left.value).toBe(5)
-    expect(bst.root.left.left.value).toBe(2)
-    expect(bst.root.left.right.value).toBe(7)
-
-    expect(bst.root.right.value).toBe(13)
-    expect(bst.root.right.left.value).toBe(11)
-    expect(bst.root.right.right.value).toBe(15)
+    expect(tree.root.key).toBe(10)
+    expect(tree.root.left.key).toBe(8)
+    expect(tree.root.left.left.key).toBe(7)
+    expect(tree.root.left.right.key).toBe(9)
+    expect(tree.root.right.key).toBe(12)
+    expect(tree.root.right.left.key).toBe(11)
+    expect(tree.root.right.right.key).toBe(13)
 })
-test('Find should return null in an empty tree structure',() => {
-    var bst = new BinarySearchTree((a, b) => {
-        return a > b ? 1 : -1;
-    });
+test('Insert should add children obeying the rule', () => {
+    const rule = (a, b) => {
+        if(a  > b) return RuleResult.LEFT
+        if(a == b) return RuleResult.EQUAL
+        if(a  < b) return RuleResult.RIGHT
+    }
 
-    expect(bst.find(3)).toBe(null)
+    const tree = new BinarySearchTree(rule, new BSTNode(10))
+    tree.insert(new BSTNode(8))
+    tree.insert(new BSTNode(9))
+    tree.insert(new BSTNode(7))
+    tree.insert(new BSTNode(12))
+    tree.insert(new BSTNode(11))
+    tree.insert(new BSTNode(13))
+
+    expect(tree.root.key).toBe(10)
+    expect(tree.root.left.key).toBe(12)
+    expect(tree.root.left.left.key).toBe(13)
+    expect(tree.root.left.right.key).toBe(11)
+    expect(tree.root.right.key).toBe(8)
+    expect(tree.root.right.left.key).toBe(9)
+    expect(tree.root.right.right.key).toBe(7)
 })
-test('Find should be able to find every node in the tree',() => {
-    var bst = new BinarySearchTree((a, b) => {
-        if(a == b) return 0
-        return a > b ? 1 : -1;
-    });
+test('BST should work with extended node classes',() => {
+    class ExtNode extends BSTNode {
+        name
 
-    bst.push(10)    
-    bst.push(5)    
-    bst.push(13)    
-    bst.push(11)    
-    bst.push(2)    
-    bst.push(15)    
-    bst.push(7)
+        constructor(key, name) {
+            super(key);
+            this.name = name
+        }
+    }
 
-    expect(bst.find(10).value).toBe(10)
-    expect(bst.find(5).value).toBe(5)
-    expect(bst.find(13).value).toBe(13)
-    expect(bst.find(11).value).toBe(11)
-    expect(bst.find(2).value).toBe(2)
-    expect(bst.find(15).value).toBe(15)
-    expect(bst.find(7).value).toBe(7)
+    const rule = (a, b) => {
+        if(a  < b) return RuleResult.LEFT
+        if(a == b) return RuleResult.EQUAL
+        if(a  > b) return RuleResult.RIGHT
+    }
+
+    const tree = new BinarySearchTree(rule, new ExtNode(10, "Root"))
+    tree.insert(new ExtNode(8, "Root - Left"))
+    tree.insert(new ExtNode(9, "Root - Left - Right"))
+    tree.insert(new ExtNode(7, "Root - Left - Left"))
+    tree.insert(new ExtNode(12, "Root - Right"))
+    tree.insert(new ExtNode(11, "Root - Right - Left"))
+    tree.insert(new ExtNode(13, "Root - Right - Right" ))
+
+    expect(tree.root.name).toBe("Root")
+    expect(tree.root.left.name).toBe("Root - Left")
+    expect(tree.root.left.right.name).toBe("Root - Left - Right")
+    expect(tree.root.left.left.name).toBe("Root - Left - Left")
+    expect(tree.root.right.name).toBe("Root - Right")
+    expect(tree.root.right.left.name).toBe("Root - Right - Left")
+    expect(tree.root.right.right.name).toBe("Root - Right - Right")
 })
-test('Find should be able to find every node in the tree',() => {
-    var bst = new BinarySearchTree((a, b) => {
-        if(a == b) return 0
-        return a > b ? 1 : -1;
-    });
+test('Test find node', () => {
+    class ExtNode extends BSTNode {
+        name
 
-    bst.push(10)    
-    bst.push(5)    
-    bst.push(13)    
-    bst.push(11)    
-    bst.push(2)    
-    bst.push(15)    
-    bst.push(7)
+        constructor(key, name) {
+            super(key);
+            this.name = name
+        }
+    }
 
-    expect(bst.find(10).value).toBe(10)
-    expect(bst.find(5).value).toBe(5)
-    expect(bst.find(13).value).toBe(13)
-    expect(bst.find(11).value).toBe(11)
-    expect(bst.find(2).value).toBe(2)
-    expect(bst.find(15).value).toBe(15)
-    expect(bst.find(7).value).toBe(7)
-})
-test('Find should return null when the value cannot be found',() => {
-    var bst = new BinarySearchTree((a, b) => {
-        if(a == b) return 0
-        return a > b ? 1 : -1;
-    });
+    const rule = (a, b) => {
+        if(a  < b) return RuleResult.LEFT
+        if(a == b) return RuleResult.EQUAL
+        if(a  > b) return RuleResult.RIGHT
+    }
 
-    bst.push(10)    
-    bst.push(5)    
-    bst.push(13)    
-    bst.push(11)    
-    bst.push(2)    
-    bst.push(15)    
-    bst.push(7)
+    const tree = new BinarySearchTree(rule, new ExtNode(10, "Root"))
+    tree.insert(new ExtNode(8, "Root - Left"))
+    tree.insert(new ExtNode(9, "Root - Left - Right"))
+    tree.insert(new ExtNode(7, "Root - Left - Left"))
+    tree.insert(new ExtNode(12, "Root - Right"))
+    tree.insert(new ExtNode(11, "Root - Right - Left"))
+    tree.insert(new ExtNode(13, "Root - Right - Right" ))
 
-    expect(bst.find(0)).toBe(null)
-    expect(bst.find(1)).toBe(null)
-    expect(bst.find(3)).toBe(null)
-})
-test('Find should return nodes so that left and right can be accessible',() => {
-    var bst = new BinarySearchTree((a, b) => {
-        if(a == b) return 0
-        return a > b ? 1 : -1;
-    });
-
-    bst.push(10)    
-    bst.push(5)    
-    bst.push(13)    
-    bst.push(11)    
-    bst.push(2)    
-    bst.push(15)    
-    bst.push(7)
-
-    var node13 = bst.find(13)
-    var node5 = bst.find(5)
-
-    expect(node13.left.value).toBe(11)
-    expect(node13.right.value).toBe(15)
-
-    expect(node5.left.value).toBe(2)
-    expect(node5.right.value).toBe(7)
+    expect(tree.find(0)).toBe(null)
+    expect(tree.find(10).name).toBe("Root")
+    expect(tree.find(8).name).toBe("Root - Left")
+    expect(tree.find(9).name).toBe("Root - Left - Right")
+    expect(tree.find(7).name).toBe("Root - Left - Left")
+    expect(tree.find(12).name).toBe("Root - Right")
+    expect(tree.find(11).name).toBe("Root - Right - Left")
+    expect(tree.find(13).name).toBe("Root - Right - Right")
 })

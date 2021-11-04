@@ -1,67 +1,53 @@
-const {Tree, TreeNode} = require('../trees/Tree')
+const {Tree, TreeNode} = require('../trees/Tree.js')
 
-test('New treenode should have a null root', ()=> {
-    var tree = new Tree()
+test('Empty tree should have null root', () => {
+    const tree = new Tree();
     expect(tree.root).toBe(null)
 })
-test('New treenode should have a null root', () => {
-    var root = new TreeNode('Root')
-    var tree = new Tree(root)
+test('Root should be able to access all children', () => {
+    const root = new TreeNode();
+    const childA = new TreeNode();
+    const childB = new TreeNode();
+    const childC = new TreeNode();
 
-    expect(tree.root.value).toBe('Root')
+    root.addChild(childA);
+    root.addChild(childB);
+    root.addChild(childC);
+
+    const tree = new Tree(root);
+    expect(tree.root).toBe(root)
+    expect(tree.root.children[0]).toBe(childA)
+    expect(tree.root.children[1]).toBe(childB)
+    expect(tree.root.children[2]).toBe(childC)
 })
-test('Child add should maintain structure', () => {
-    var root = new TreeNode('Root')
-    var root_childA = new TreeNode('Root - ChildA')
-    var root_childB = new TreeNode('Root - ChildB')
-    var root_childC = new TreeNode('Root - ChildC')
-    var root_childA_childA = new TreeNode('Root - ChildA - ChildA')
-    var root_childA_childB = new TreeNode('Root - ChildA - ChildB')
-    var root_childA_childC = new TreeNode('Root - ChildA - ChildC')
-    var root_childB_childA = new TreeNode('Root - ChildB - ChildA')
-    var root_childB_childB = new TreeNode('Root - ChildB - ChildB')
+test('Tree should allow children of children', () => {
+    const root = new TreeNode();
 
-    root.addChild(root_childA)
-    root.addChild(root_childB)
-    root.addChild(root_childC)
-    root_childA.addChild(root_childA_childA)
-    root_childA.addChild(root_childA_childB)
-    root_childA.addChild(root_childA_childC)
-    root_childB.addChild(root_childB_childA)
-    root_childB.addChild(root_childB_childB)
+    const childA = new TreeNode();
+    const childAA = new TreeNode();
+    const childAB = new TreeNode();
 
-    expect(root.children[0].value).toBe('Root - ChildA')
-    expect(root.children[1].value).toBe('Root - ChildB')
-    expect(root.children[2].value).toBe('Root - ChildC')
-    expect(root.children[0].children[0].value).toBe('Root - ChildA - ChildA')
-    expect(root.children[0].children[1].value).toBe('Root - ChildA - ChildB')
-    expect(root.children[0].children[2].value).toBe('Root - ChildA - ChildC')
-    expect(root.children[1].children[0].value).toBe('Root - ChildB - ChildA')
-    expect(root.children[1].children[1].value).toBe('Root - ChildB - ChildB')
-})
-test('Child remove should search correctly inside tree', () => {
-    var root = new TreeNode('Root')
-    var root_childA = new TreeNode('Root - ChildA')
-    var root_childB = new TreeNode('Root - ChildB')
-    var root_childC = new TreeNode('Root - ChildC')
-    var root_childA_childA = new TreeNode('Root - ChildA - ChildA')
-    var root_childA_childB = new TreeNode('Root - ChildA - ChildB')
-    var root_childA_childC = new TreeNode('Root - ChildA - ChildC')
-    var root_childB_childA = new TreeNode('Root - ChildB - ChildA')
-    var root_childB_childB = new TreeNode('Root - ChildB - ChildB')
+    const childB = new TreeNode();
+    const childBA = new TreeNode();
 
-    root.addChild(root_childA)
-    root.addChild(root_childB)
-    root.addChild(root_childC)
-    root_childA.addChild(root_childA_childA)
-    root_childA.addChild(root_childA_childB)
-    root_childA.addChild(root_childA_childC)
-    root_childB.addChild(root_childB_childA)
-    root_childB.addChild(root_childB_childB)
+    const childC = new TreeNode();
 
-    root.removeChild(root_childA)
-    expect(root.children[0].value).toBe('Root - ChildB')  
+    root.addChild(childA);
+    root.addChild(childB);
+    root.addChild(childC);
 
-    root_childB.removeChild(root_childB_childA)
-    expect(root.children[0].children[0].value).toBe('Root - ChildB - ChildB')
+    childA.addChild(childAA);
+    childA.addChild(childAB);
+
+    childB.addChild(childBA);
+
+    const tree = new Tree(root);
+    expect(tree.root).toBe(root)
+    expect(tree.root.children[0]).toBe(childA)
+    expect(tree.root.children[0].children[0]).toBe(childAA)
+    expect(tree.root.children[0].children[1]).toBe(childAB)
+    expect(tree.root.children[1]).toBe(childB)
+    expect(tree.root.children[1].children[0]).toBe(childBA)
+    expect(tree.root.children[2]).toBe(childC)
+    expect(tree.root.children[2].children[0]).toBe(undefined)
 })

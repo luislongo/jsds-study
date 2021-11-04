@@ -1,70 +1,88 @@
-class BinarySearchTree<T> {
-    root : BSTNode<T> | null 
-    rule : (a : T, b : T) => number
+export class BinarySearchTree<T, U extends BSTNode<U, T>> {
+    root : U | null
+    rule : (a : T, b : T) => RuleResult
 
-    constructor(rule : (a : T, b : T) => number) {
-        this.root = null
+    constructor(rule : (a : T, b : T) => RuleResult, root : U) {
         this.rule = rule
-    }
-    push(value : T) {
-        if(this.root == null) {
-            this.root = new BSTNode(value)
+
+        if(root) {
+            this.root = root
         } else {
-            this.#insert(value, this.root)
+            this.root = null
         }
     }
-    #insert(value : T, node : BSTNode<T>) {
-        if(this.rule(value, node.value) == -1) {
-            if(node.left) {
-                this.#insert(value, node.left)
-            } else {
-                node.left = new BSTNode<T>(value)
-            }
-        }
-        if(this.rule(value, node.value) == 1) {
-            if(node.right) {
-                this.#insert(value, node.right)
-            } else {
-                node.right = new BSTNode<T>(value)
-            }
+
+    insert = (node : U) : void => {
+        if(!this.root) {
+            this.root = node
+        } else {
+            this.#insert(node, this.root)
         }
     }
-    find(value: T) : BSTNode<T> | null {
+    #insert = (node : U, parent : U) : void => {
+        //Checks if inserted value goes left
+        if(this.rule(node.key, parent.key) == RuleResult.LEFT) {
+            if(parent.left) {
+                this.#insert(node, parent.left)
+            } else {
+                parent.left = node
+            }
+            return;
+        }
+        
+        //Checks if inserted value goes right
+        if(this.rule(node.key, parent.key) == RuleResult.RIGHT) {
+            if(parent.right) {
+                this.#insert(node, parent.right)
+            } else {
+                parent.right = node
+            }
+            return;
+        }
+
+        //If value is the same, does nothing
+    } 
+    find = (key : T) : U | null => {
         if(this.root) {
-            return this.#find(value, this.root)
+            return this.#find(key, this.root)
         } else {
             return null
         }
     }
-    #find(value : T, node : BSTNode<T>) : BSTNode<T> | null {
-        if(this.rule(value, node.value) == 0) {
-            return node
-        }
-    
-        if(this.rule(value, node.value) == -1) {
+    #find = (key : T, node : U) : U | null => {
+        if(this.rule(key, node.key) == RuleResult.LEFT) {
             if(node.left) {
-                return this.#find(value, node.left)
+                return this.#find(key, node.left)
             }
         }
-    
-        if(this.rule(value, node.value) == 1) {
+
+        if(this.rule(key, node.key) == RuleResult.RIGHT) {
             if(node.right) {
-                return this.#find(value, node.right)
+                return this.#find(key, node.right)
             }
+        }
+        
+        if(this.rule(key, node.key) == RuleResult.EQUAL) {
+            return node
         }
 
         return null
     }
-}
-class BSTNode<T> {
-    value : T
-    left : BSTNode<T> | null
-    right : BSTNode<T> | null
 
-    constructor(value : T) {
-        this.value = value
+}
+
+export enum RuleResult {
+    LEFT, RIGHT, EQUAL
+}
+
+export class BSTNode<U extends BSTNode<U, T>, T> {
+    key : T
+    left : U | null
+    right : U | null
+
+    constructor(key : T) {
+        this.key = key
         this.left = null
         this.right = null
     }
 }
-export {BSTNode, BinarySearchTree}
