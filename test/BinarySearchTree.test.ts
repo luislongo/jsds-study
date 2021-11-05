@@ -1,9 +1,7 @@
-const BinarySearchTree = require("../trees/BinarySearchTree").BinarySearchTree
-const BSTNode = require("../trees/BinarySearchTree").BSTNode
-const RuleResult = require("../trees/BinarySearchTree").RuleResult
+import {BinarySearchTree, BSTNode, RuleResult} from "../trees/BinarySearchTree"
 
 test('Root should be null for empty tree', () => {
-    const rule = (a, b) => {
+    const rule = (a : number, b : number) : RuleResult => {
         if(a  < b) return RuleResult.LEFT
         if(a == b) return RuleResult.EQUAL
         if(a  > b) return RuleResult.RIGHT
