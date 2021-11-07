@@ -1,135 +1,92 @@
 import {BinarySearchTree, BSTNode, RuleResult} from "../trees/BinarySearchTree"
 
-test('Root should be null for empty tree', () => {
-    const rule = (a : number, b : number) : RuleResult => {
-        if(a  < b) return RuleResult.LEFT
-        if(a == b) return RuleResult.EQUAL
-        if(a  > b) return RuleResult.RIGHT
-    }
+class MockNode extends BSTNode<MockNode, number> {
+    name : String 
 
-    const tree = new BinarySearchTree(rule, null)
+    constructor(key : number, name : String) {
+        super(key)
+        this.name = name
+    }
+}
+
+class MockBST extends BinarySearchTree<MockNode, number> {
+    constructor(rule : (a : number, b : number) => RuleResult, root : MockNode) {
+        super(rule, root)
+    }
+}
+
+const decrescent = (a : number, b : number) : RuleResult => {
+    if(a  > b) return RuleResult.LEFT
+    if(a == b) return RuleResult.EQUAL
+    if(a  < b) return RuleResult.RIGHT
+}
+
+const crescent = (a : number, b : number) : RuleResult => {
+    if(a  < b) return RuleResult.LEFT
+    if(a == b) return RuleResult.EQUAL
+    if(a  > b) return RuleResult.RIGHT
+}
+
+test('Root should be null for empty tree', () => {
+    const tree = new BinarySearchTree(crescent, null)
     expect(tree.root).toBe(null)
 })
 test('Root should be value for initialised tree', () => {
-    const rule = (a, b) => {
-        if(a  < b) return RuleResult.LEFT
-        if(a == b) return RuleResult.EQUAL
-        if(a  > b) return RuleResult.RIGHT
-    }
+    const root = new MockNode(10, 'Root')
 
-    const root = new BSTNode(10);
-
-    const tree = new BinarySearchTree(rule, root)
+    const tree = new BinarySearchTree(crescent, root)
     expect(tree.root.key).toBe(10)
+    expect(tree.root.name).toBe('Root')
 })
 test('Insert should add children obeying the rule', () => {
-    const rule = (a, b) => {
-        if(a  < b) return RuleResult.LEFT
-        if(a == b) return RuleResult.EQUAL
-        if(a  > b) return RuleResult.RIGHT
-    }
+    const tree = new MockBST(crescent, new MockNode(10, 'Root'))
+    tree.insert(new MockNode(8, 'L'))
+    tree.insert(new MockNode(9, 'LR'))
+    tree.insert(new MockNode(7, 'LL'))
+    tree.insert(new MockNode(12, 'R'))
+    tree.insert(new MockNode(11, 'RL'))
+    tree.insert(new MockNode(13, 'RR'))
 
-    const tree = new BinarySearchTree(rule, new BSTNode(10))
-    tree.insert(new BSTNode(8))
-    tree.insert(new BSTNode(9))
-    tree.insert(new BSTNode(7))
-    tree.insert(new BSTNode(12))
-    tree.insert(new BSTNode(11))
-    tree.insert(new BSTNode(13))
-
-    expect(tree.root.key).toBe(10)
-    expect(tree.root.left.key).toBe(8)
-    expect(tree.root.left.left.key).toBe(7)
-    expect(tree.root.left.right.key).toBe(9)
-    expect(tree.root.right.key).toBe(12)
-    expect(tree.root.right.left.key).toBe(11)
-    expect(tree.root.right.right.key).toBe(13)
+    expect(tree.root.name).toBe('Root')
+    expect(tree.root.left().name).toBe('L')
+    expect(tree.root.left().left().name).toBe('LL')
+    expect(tree.root.left().right().name).toBe('LR')
+    expect(tree.root.right().name).toBe('R')
+    expect(tree.root.right().left().name).toBe('RL')
+    expect(tree.root.right().right().name).toBe('RR')
 })
 test('Insert should add children obeying the rule', () => {
-    const rule = (a, b) => {
-        if(a  > b) return RuleResult.LEFT
-        if(a == b) return RuleResult.EQUAL
-        if(a  < b) return RuleResult.RIGHT
-    }
+    const tree = new MockBST(decrescent, new MockNode(10, 'Root'))
+    tree.insert(new MockNode(8,  'R' ))
+    tree.insert(new MockNode(9,  'RL'))
+    tree.insert(new MockNode(7,  'RR'))
+    tree.insert(new MockNode(12, 'L' ))
+    tree.insert(new MockNode(11, 'LR'))
+    tree.insert(new MockNode(13, 'LL'))
 
-    const tree = new BinarySearchTree(rule, new BSTNode(10))
-    tree.insert(new BSTNode(8))
-    tree.insert(new BSTNode(9))
-    tree.insert(new BSTNode(7))
-    tree.insert(new BSTNode(12))
-    tree.insert(new BSTNode(11))
-    tree.insert(new BSTNode(13))
-
-    expect(tree.root.key).toBe(10)
-    expect(tree.root.left.key).toBe(12)
-    expect(tree.root.left.left.key).toBe(13)
-    expect(tree.root.left.right.key).toBe(11)
-    expect(tree.root.right.key).toBe(8)
-    expect(tree.root.right.left.key).toBe(9)
-    expect(tree.root.right.right.key).toBe(7)
-})
-test('BST should work with extended node classes',() => {
-    class ExtNode extends BSTNode {
-        name
-
-        constructor(key, name) {
-            super(key);
-            this.name = name
-        }
-    }
-
-    const rule = (a, b) => {
-        if(a  < b) return RuleResult.LEFT
-        if(a == b) return RuleResult.EQUAL
-        if(a  > b) return RuleResult.RIGHT
-    }
-
-    const tree = new BinarySearchTree(rule, new ExtNode(10, "Root"))
-    tree.insert(new ExtNode(8, "Root - Left"))
-    tree.insert(new ExtNode(9, "Root - Left - Right"))
-    tree.insert(new ExtNode(7, "Root - Left - Left"))
-    tree.insert(new ExtNode(12, "Root - Right"))
-    tree.insert(new ExtNode(11, "Root - Right - Left"))
-    tree.insert(new ExtNode(13, "Root - Right - Right" ))
-
-    expect(tree.root.name).toBe("Root")
-    expect(tree.root.left.name).toBe("Root - Left")
-    expect(tree.root.left.right.name).toBe("Root - Left - Right")
-    expect(tree.root.left.left.name).toBe("Root - Left - Left")
-    expect(tree.root.right.name).toBe("Root - Right")
-    expect(tree.root.right.left.name).toBe("Root - Right - Left")
-    expect(tree.root.right.right.name).toBe("Root - Right - Right")
+    expect(tree.root.name).toBe('Root')
+    expect(tree.root.left().name).toBe('L')
+    expect(tree.root.left().left().name).toBe('LL')
+    expect(tree.root.left().right().name).toBe('LR')
+    expect(tree.root.right().name).toBe('R')
+    expect(tree.root.right().left().name).toBe('RL')
+    expect(tree.root.right().right().name).toBe('RR')
 })
 test('Test find node', () => {
-    class ExtNode extends BSTNode {
-        name
+    const tree = new MockBST(crescent, new MockNode(10, 'Root'))
+    tree.insert(new MockNode(8, 'L'))
+    tree.insert(new MockNode(9, 'LR'))
+    tree.insert(new MockNode(7, 'LL'))
+    tree.insert(new MockNode(12, 'R'))
+    tree.insert(new MockNode(11, 'RL'))
+    tree.insert(new MockNode(13, 'RR'))
 
-        constructor(key, name) {
-            super(key);
-            this.name = name
-        }
-    }
-
-    const rule = (a, b) => {
-        if(a  < b) return RuleResult.LEFT
-        if(a == b) return RuleResult.EQUAL
-        if(a  > b) return RuleResult.RIGHT
-    }
-
-    const tree = new BinarySearchTree(rule, new ExtNode(10, "Root"))
-    tree.insert(new ExtNode(8, "Root - Left"))
-    tree.insert(new ExtNode(9, "Root - Left - Right"))
-    tree.insert(new ExtNode(7, "Root - Left - Left"))
-    tree.insert(new ExtNode(12, "Root - Right"))
-    tree.insert(new ExtNode(11, "Root - Right - Left"))
-    tree.insert(new ExtNode(13, "Root - Right - Right" ))
-
-    expect(tree.find(0)).toBe(null)
-    expect(tree.find(10).name).toBe("Root")
-    expect(tree.find(8).name).toBe("Root - Left")
-    expect(tree.find(9).name).toBe("Root - Left - Right")
-    expect(tree.find(7).name).toBe("Root - Left - Left")
-    expect(tree.find(12).name).toBe("Root - Right")
-    expect(tree.find(11).name).toBe("Root - Right - Left")
-    expect(tree.find(13).name).toBe("Root - Right - Right")
+    expect(tree.find(0)).toBe(undefined)
+    expect(tree.find(10).name).toBe('Root')
+    expect(tree.find(8).name).toBe('L')
+    expect(tree.find(9).name).toBe('LR')
+    expect(tree.find(7).name).toBe('LL')
+    expect(tree.find(12).name).toBe('R')
+    expect(tree.find(11).name).toBe('RL')
+    expect(tree.find(13).name).toBe('RR')
 })

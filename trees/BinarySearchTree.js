@@ -7,10 +7,12 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 var _BinarySearchTree_insert, _BinarySearchTree_find;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BSTNode = exports.RuleResult = exports.BinarySearchTree = void 0;
-class BinarySearchTree {
+const Tree_1 = require("./Tree");
+class BinarySearchTree extends Tree_1.Tree {
     constructor(rule, root) {
+        super(root);
         this.insert = (node) => {
-            if (!this.root) {
+            if (this.root == null) {
                 this.root = node;
             }
             else {
@@ -20,21 +22,21 @@ class BinarySearchTree {
         _BinarySearchTree_insert.set(this, (node, parent) => {
             //Checks if inserted value goes left
             if (this.rule(node.key, parent.key) == RuleResult.LEFT) {
-                if (parent.left) {
-                    __classPrivateFieldGet(this, _BinarySearchTree_insert, "f").call(this, node, parent.left);
+                if (parent.left()) {
+                    __classPrivateFieldGet(this, _BinarySearchTree_insert, "f").call(this, node, parent.left());
                 }
                 else {
-                    parent.left = node;
+                    parent.setLeft(node);
                 }
                 return;
             }
-            //Checks if inserted value goes right
+            //Checks if inserted Svalue goes right
             if (this.rule(node.key, parent.key) == RuleResult.RIGHT) {
-                if (parent.right) {
-                    __classPrivateFieldGet(this, _BinarySearchTree_insert, "f").call(this, node, parent.right);
+                if (parent.right()) {
+                    __classPrivateFieldGet(this, _BinarySearchTree_insert, "f").call(this, node, parent.right());
                 }
                 else {
-                    parent.right = node;
+                    parent.setRight(node);
                 }
                 return;
             }
@@ -44,33 +46,23 @@ class BinarySearchTree {
             if (this.root) {
                 return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, this.root);
             }
-            else {
-                return null;
-            }
         };
         _BinarySearchTree_find.set(this, (key, node) => {
             if (this.rule(key, node.key) == RuleResult.LEFT) {
-                if (node.left) {
-                    return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, node.left);
+                if (node.left()) {
+                    return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, node.left());
                 }
             }
             if (this.rule(key, node.key) == RuleResult.RIGHT) {
-                if (node.right) {
-                    return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, node.right);
+                if (node.right()) {
+                    return __classPrivateFieldGet(this, _BinarySearchTree_find, "f").call(this, key, node.right());
                 }
             }
             if (this.rule(key, node.key) == RuleResult.EQUAL) {
                 return node;
             }
-            return null;
         });
         this.rule = rule;
-        if (root) {
-            this.root = root;
-        }
-        else {
-            this.root = null;
-        }
     }
 }
 exports.BinarySearchTree = BinarySearchTree;
@@ -81,11 +73,14 @@ var RuleResult;
     RuleResult[RuleResult["RIGHT"] = 1] = "RIGHT";
     RuleResult[RuleResult["EQUAL"] = 2] = "EQUAL";
 })(RuleResult = exports.RuleResult || (exports.RuleResult = {}));
-class BSTNode {
+class BSTNode extends Tree_1.TreeNode {
     constructor(key) {
+        super();
+        this.left = () => { return this.childNodes[0]; };
+        this.right = () => { return this.childNodes[1]; };
+        this.setLeft = (child) => { this.childNodes[0] = child; };
+        this.setRight = (child) => { this.childNodes[1] = child; };
         this.key = key;
-        this.left = null;
-        this.right = null;
     }
 }
 exports.BSTNode = BSTNode;
