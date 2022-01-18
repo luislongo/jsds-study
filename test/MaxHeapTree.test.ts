@@ -1,4 +1,4 @@
-const MaxHeapTree = require('../heaps/MaxHeapTree.js').MaxHeapTree
+const MaxHeapTree = require('../trees/MaxHeapTree.js').MaxHeapTree
 
 test('Heap tree inserts should respect order', () => {
     const tree = new MaxHeapTree()

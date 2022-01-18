@@ -20,9 +20,15 @@ As a project requirement, all data structures are implemented using generics to 
 # Install node modules
 $ npm i
 ```
+
+```bash
+# TS transpiling in watch mode
+$ tsc --watch
+```
+
 ```bash
 # Run tests
-$ npm test
+$ npm run test
 
 # Run tests in watch mode
 $ npm run test -- --watch
