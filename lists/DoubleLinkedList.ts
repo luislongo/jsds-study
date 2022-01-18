@@ -1,6 +1,6 @@
-class DoubleLinkedList<T> {
-    head : DLLNode<T> | null
-    tail : DLLNode<T> | null
+export class DoubleLinkedList<T extends DLLNode<T>> {
+    head : T | null
+    tail : T | null
     length : number
 
     constructor() {
@@ -9,24 +9,22 @@ class DoubleLinkedList<T> {
         this.length = 0
     }
 
-    push(value : T) : DoubleLinkedList<T> {
-        var newNode = new DLLNode(value) 
-        
+    push(node : T) : DoubleLinkedList<T> {
         if(this.length == 0) {
-            this.head = newNode
-            this.tail = newNode 
+            this.head = node
+            this.tail = node 
         } else {
-            this.tail!.next = newNode
-            newNode.prev = this.tail!
+            this.tail!.next = node
+            node.prev = this.tail!
 
-            this.tail = newNode
+            this.tail = node
         }
 
         this.length++
         return this
     }
     pop() : T | null {
-        var node : DLLNode<T> | null = this.tail
+        var node : T | null = this.tail
         
         if(this.length == 1) {
             this.head = null
@@ -39,13 +37,13 @@ class DoubleLinkedList<T> {
         }
 
         if(node) {
-            return node.value
+            return node
         } else {
             return null
         }
     }
     shift() : T | null {
-        var node : DLLNode<T> | null = this.head
+        var node : T | null = this.head
         
         if(this.length == 1) {
             this.head = null
@@ -58,14 +56,12 @@ class DoubleLinkedList<T> {
         }
 
         if(node) {
-            return node.value
+            return node
         } else {
             return null
         }
     }
-    unshift(value : T) : DoubleLinkedList<T> {
-        var newNode = new DLLNode(value) 
-        
+    unshift(newNode : T) : DoubleLinkedList<T> {        
         if(this.length == 0) {
             this.head = newNode
             this.tail = newNode 
@@ -79,94 +75,97 @@ class DoubleLinkedList<T> {
         this.length++
         return this
     }
-    get(pos : number) : T | null {
-        if(pos >= 0 && pos <this.length) {
-            var node = this.getNode(pos)
-            if(node) {return node!.value}
+    get(pos : number) : T {
+        if(pos < 0 || pos >= this.length) {
+            throw new Error(`Invalid index ${pos}. Index should be in range [0, ${this.length - 1}]`)
         }
-        return null
-    }
-    set(pos : number, value : T) {
-        if(pos >= 0 && pos <this.length) {
-            var node = this.getNode(pos)
-            node!.value = value
+
+        var node : T = this.head!;
+        for(var i = 0; i < pos; i++) {
+            node = node.next!
         }
+
+        return node  
     }
-    insert(pos : number, value : T) {
-        if(pos == 0) 
-            {this.unshift(value)} else
-        if(pos == this.length) 
-            {this.push(value)} else 
-        {
-            var newNode = new DLLNode(value)
+    set(pos : number, node : T) : void {
+        if(pos < 0 || pos >= this.length) {
+            throw new Error(`Invalid index ${pos}. Index should be in range [0, ${this.length - 1}]`)
+        }
 
-            var node = this.getNode(pos)
-            var prev = node!.prev
+        // Copy current node links
+        let curNode = this.get(pos);
+        node.prev = curNode.prev;
+        node.next = curNode.next;
 
-            prev!.next = newNode
-            node!.prev = newNode
-            newNode.prev = prev
-            newNode.next = node
+        // Update list references
+        (node.prev) && (node.prev.next = node);
+        (node.next) && (node.next.prev = node);
+        (pos == 0) && (this.head = node);
+        (pos == this.length - 1) && (this.tail = node);
 
-            this.length++
-        }       
+        // Clean old node
+        curNode.prev = null;
+        curNode.next = null;
+    }
+    insert(pos : number, node : T) : void {
+        if(pos == 0) {
+            this.unshift(node)
+            return;
+        }
+
+        if(pos == this.length) {
+            this.push(node)
+            return;
+        } 
+
+        let nodeBefore = this.get(pos-1)
+        let nodeAfter = nodeBefore.next!
+
+        node.prev = nodeBefore;
+        node.next = nodeAfter;
+
+        nodeBefore.next = node;
+        nodeAfter.prev = node;
+
+        this.length++
     }
     remove(pos : number) {
-        if(pos == 0) 
-            {return this.shift()} else
-        if(pos == this.length - 1) 
-            {return this.pop()} else 
-        if(pos > 0 && pos < this.length - 1) {
-            var node = this.getNode(pos)
-            var prev = node!.prev
-            var next = node!.next
+        if(pos == 0) return this.shift(); 
+        if(pos == this.length - 1) return this.pop() 
+        
+        var node = this.get(pos)
+        var prev = node.prev!
+        var next = node.next!
 
-            prev!.next = next
-            next!.prev = prev    
-            
-            return node!.value
-        }
+        prev.next = next
+        next.prev = prev    
+        
+        return node
     }
     reverse() : DoubleLinkedList<T> {
-        var node = this.head
-        var revList = new DoubleLinkedList<T>()
+        if(this.length == 0) return new DoubleLinkedList<T>();
 
-        for(var i = 0; i < this.length; i++) {
-            revList.unshift(node!.value)
-            node = node!.next
+        let pivot = this.head!
+        for(let i : number = 0; i < this.length; i++) {
+            const oldPrev = pivot.prev
+            const oldNext = pivot.next
+            
+            pivot.next = oldPrev
+            pivot.prev = oldNext
+
+            pivot = oldNext!
         }
 
-        return revList
+        const temp = this.head;
+        this.head = this.tail;
+        this.tail = temp;
+
+        return this
     }
-    getNode(pos : number) : DLLNode<T> | null {
-        var node : DLLNode<T> | null = this.head;
-        for(var i = 0; i < pos; i++) {
-            node = node!.next
-        }
-        return node   
-    }
-    toString() : String {
-        var string = ''
-        var node = this.head
 
-        string += node!.value
-        while(node!.next != null) {
-            node = node!.next
-            string += ' <-> '  + node!.value
-        }
 
-        return string
-    } 
 }
-class DLLNode<T> {
-    value : T
-    next : DLLNode<T> | null
-    prev : DLLNode<T> | null
-
-    constructor(value : T) {
-        this.value = value
-        this.next = null
-        this.prev = null
-    }
+export class DLLNode<T extends DLLNode<T>> {
+    next : T | null = null
+    prev : T | null = null
 }
-export default DoubleLinkedList

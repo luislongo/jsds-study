@@ -1,21 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.DLLNode = exports.DoubleLinkedList = void 0;
 class DoubleLinkedList {
     constructor() {
         this.head = null;
         this.tail = null;
         this.length = 0;
     }
-    push(value) {
-        var newNode = new DLLNode(value);
+    push(node) {
         if (this.length == 0) {
-            this.head = newNode;
-            this.tail = newNode;
+            this.head = node;
+            this.tail = node;
         }
         else {
-            this.tail.next = newNode;
-            newNode.prev = this.tail;
-            this.tail = newNode;
+            this.tail.next = node;
+            node.prev = this.tail;
+            this.tail = node;
         }
         this.length++;
         return this;
@@ -32,7 +32,7 @@ class DoubleLinkedList {
             this.length--;
         }
         if (node) {
-            return node.value;
+            return node;
         }
         else {
             return null;
@@ -50,14 +50,13 @@ class DoubleLinkedList {
             this.length--;
         }
         if (node) {
-            return node.value;
+            return node;
         }
         else {
             return null;
         }
     }
-    unshift(value) {
-        var newNode = new DLLNode(value);
+    unshift(newNode) {
         if (this.length == 0) {
             this.head = newNode;
             this.tail = newNode;
@@ -71,86 +70,83 @@ class DoubleLinkedList {
         return this;
     }
     get(pos) {
-        if (pos >= 0 && pos < this.length) {
-            var node = this.getNode(pos);
-            if (node) {
-                return node.value;
-            }
+        if (pos < 0 || pos >= this.length) {
+            throw new Error(`Invalid index ${pos}. Index should be in range [0, ${this.length - 1}]`);
         }
-        return null;
-    }
-    set(pos, value) {
-        if (pos >= 0 && pos < this.length) {
-            var node = this.getNode(pos);
-            node.value = value;
-        }
-    }
-    insert(pos, value) {
-        if (pos == 0) {
-            this.unshift(value);
-        }
-        else if (pos == this.length) {
-            this.push(value);
-        }
-        else {
-            var newNode = new DLLNode(value);
-            var node = this.getNode(pos);
-            var prev = node.prev;
-            prev.next = newNode;
-            node.prev = newNode;
-            newNode.prev = prev;
-            newNode.next = node;
-            this.length++;
-        }
-    }
-    remove(pos) {
-        if (pos == 0) {
-            return this.shift();
-        }
-        else if (pos == this.length - 1) {
-            return this.pop();
-        }
-        else if (pos > 0 && pos < this.length - 1) {
-            var node = this.getNode(pos);
-            var prev = node.prev;
-            var next = node.next;
-            prev.next = next;
-            next.prev = prev;
-            return node.value;
-        }
-    }
-    reverse() {
-        var node = this.head;
-        var revList = new DoubleLinkedList();
-        for (var i = 0; i < this.length; i++) {
-            revList.unshift(node.value);
-            node = node.next;
-        }
-        return revList;
-    }
-    getNode(pos) {
         var node = this.head;
         for (var i = 0; i < pos; i++) {
             node = node.next;
         }
         return node;
     }
-    toString() {
-        var string = '';
-        var node = this.head;
-        string += node.value;
-        while (node.next != null) {
-            node = node.next;
-            string += ' <-> ' + node.value;
+    set(pos, node) {
+        if (pos < 0 || pos >= this.length) {
+            throw new Error(`Invalid index ${pos}. Index should be in range [0, ${this.length - 1}]`);
         }
-        return string;
+        // Copy current node links
+        let curNode = this.get(pos);
+        node.prev = curNode.prev;
+        node.next = curNode.next;
+        // Update list references
+        (node.prev) && (node.prev.next = node);
+        (node.next) && (node.next.prev = node);
+        (pos == 0) && (this.head = node);
+        (pos == this.length - 1) && (this.tail = node);
+        // Clean old node
+        curNode.prev = null;
+        curNode.next = null;
+    }
+    insert(pos, node) {
+        if (pos == 0) {
+            this.unshift(node);
+            return;
+        }
+        if (pos == this.length) {
+            this.push(node);
+            return;
+        }
+        let nodeBefore = this.get(pos - 1);
+        let nodeAfter = nodeBefore.next;
+        node.prev = nodeBefore;
+        node.next = nodeAfter;
+        nodeBefore.next = node;
+        nodeAfter.prev = node;
+        this.length++;
+    }
+    remove(pos) {
+        if (pos == 0)
+            return this.shift();
+        if (pos == this.length - 1)
+            return this.pop();
+        var node = this.get(pos);
+        var prev = node.prev;
+        var next = node.next;
+        prev.next = next;
+        next.prev = prev;
+        return node;
+    }
+    reverse() {
+        if (this.length == 0)
+            return new DoubleLinkedList();
+        let pivot = this.head;
+        for (let i = 0; i < this.length; i++) {
+            const oldPrev = pivot.prev;
+            const oldNext = pivot.next;
+            pivot.next = oldPrev;
+            pivot.prev = oldNext;
+            pivot = oldNext;
+        }
+        const temp = this.head;
+        this.head = this.tail;
+        this.tail = temp;
+        return this;
     }
 }
+exports.DoubleLinkedList = DoubleLinkedList;
 class DLLNode {
-    constructor(value) {
-        this.value = value;
+    constructor() {
         this.next = null;
         this.prev = null;
     }
 }
-exports.default = DoubleLinkedList;
+exports.DLLNode = DLLNode;
