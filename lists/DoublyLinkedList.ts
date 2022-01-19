@@ -7,7 +7,7 @@ export interface IDoublyLinkedList<T> {
     unshift(value: T): void; // O(1)
     shift(): T | undefined; // O(1)
     reverse(): void; // O(n)
-    get(pos: number): T | undefined; // O(n/2) -> O(n)
+    get(pos: number): T | undefined; // O(n)
     set(pos: number, value: T): void; // O(n)
 }
 

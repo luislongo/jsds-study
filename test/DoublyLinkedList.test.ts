@@ -276,7 +276,7 @@ test('Set should update element at position', () => {
     expect(dll.get(0)).toBe('New Head');
 
     dll.set(1, 'New Middle');
-    expect(dll.get(0)).toBe('New Middle');
+    expect(dll.get(1)).toBe('New Middle');
 
     dll.set(2, 'New Tail');
     expect(dll.get(2)).toBe('New Tail');
