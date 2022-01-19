@@ -98,6 +98,25 @@ export default class SingleLinkedList<T> implements ISingleLinkedList<T> {
         this.#head = node;
         this.#length += 1;
     }
+
+    reverse(): void {
+        // Empty and one element list
+        if (this.#length <= 1) {
+            return;
+        }
+
+        // General case
+        let pivot = this.#head;
+        let before = undefined;
+        while (pivot) {
+            const next = pivot.next();
+
+            pivot.setNext(before);
+            before = pivot;
+            pivot = next;
+        }
+        this.#head = before;
+    }
 }
 
 export interface ISingleLinkedList<T> {
@@ -108,6 +127,7 @@ export interface ISingleLinkedList<T> {
     pop(): T | undefined; // O(n)
     shift(): T | undefined; // O(1)
     unshift(value: T): void; // O(1)
+    reverse(): void; // O(n)
 }
 
 class Node<T> {

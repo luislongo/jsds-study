@@ -208,3 +208,31 @@ test('Head should be updated after each unshift', () => {
     sll.unshift('Head');
     expect(sll.head()).toBe('Head');
 });
+test('Reverse should reverse list elements order', () => {
+    let sll = new SingleLinkedList<string>();
+    sll.push('Head');
+    sll.push('Middle');
+    sll.push('Tail');
+    sll.reverse();
+
+    expect(sll.shift()).toBe('Tail');
+    expect(sll.shift()).toBe('Middle');
+    expect(sll.shift()).toBe('Head');
+});
+test('Reverse should not change length', () => {
+    let sll = new SingleLinkedList<string>();
+    sll.push('Head');
+    sll.push('Middle');
+    sll.push('Tail');
+    sll.reverse();
+
+    expect(sll.length()).toBe(3);
+});
+test('Reverse shouldnt do anything on a list with less than two elements', () => {
+    let sll = new SingleLinkedList<string>();
+    sll.push('Head');
+    sll.reverse();
+
+    expect(sll.shift()).toBe('Head');
+    expect(sll.shift()).toBe(undefined);
+});
