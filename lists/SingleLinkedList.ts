@@ -1,3 +1,14 @@
+export interface ISingleLinkedList<T> {
+    length(): number; // O(1)
+    head(): T | undefined; // O(1)
+    tail(): T | undefined; // O(n)
+    push(value: T): void; // O(n)
+    pop(): T | undefined; // O(n)
+    shift(): T | undefined; // O(1)
+    unshift(value: T): void; // O(1)
+    reverse(): void; // O(n)
+}
+
 export default class SingleLinkedList<T> implements ISingleLinkedList<T> {
     #head: Node<T> | undefined;
     #length: number;
@@ -117,17 +128,6 @@ export default class SingleLinkedList<T> implements ISingleLinkedList<T> {
         }
         this.#head = before;
     }
-}
-
-export interface ISingleLinkedList<T> {
-    length(): number; // O(1)
-    head(): T | undefined; // O(1)
-    tail(): T | undefined; // O(n)
-    push(value: T): void; // O(n)
-    pop(): T | undefined; // O(n)
-    shift(): T | undefined; // O(1)
-    unshift(value: T): void; // O(1)
-    reverse(): void; // O(n)
 }
 
 class Node<T> {

@@ -1,3 +1,16 @@
+export interface IDoublyLinkedList<T> {
+    length(): number; // O(1)
+    head(): T | undefined; // O(1)
+    tail(): T | undefined; // O(1)
+    push(value: T): void; // O(1)
+    pop(): T | undefined; // O(1)
+    unshift(value: T): void; // O(1)
+    shift(): T | undefined; // O(1)
+    reverse(): void; // O(n)
+    get(pos: number): T | undefined; // O(n/2) -> O(n)
+    set(pos: number, value: T): void; // O(n)
+}
+
 export default class DoublyLinkedList<T> implements IDoublyLinkedList<T> {
     #head: Node<T> | undefined;
     #tail: Node<T> | undefined;
@@ -151,19 +164,6 @@ export default class DoublyLinkedList<T> implements IDoublyLinkedList<T> {
         const node = this.getNode(pos);
         node && (node.value = value);
     }
-}
-
-export interface IDoublyLinkedList<T> {
-    length(): number; // O(1)
-    head(): T | undefined; // O(1)
-    tail(): T | undefined; // O(1)
-    push(value: T): void; // O(1)
-    pop(): T | undefined; // O(1)
-    unshift(value: T): void; // O(1)
-    shift(): T | undefined; // O(1)
-    reverse(): void; // O(n)
-    get(pos: number): T | undefined; // O(n/2) -> O(n)
-    set(pos: number, value: T): void; // O(n)
 }
 
 class Node<T> {
